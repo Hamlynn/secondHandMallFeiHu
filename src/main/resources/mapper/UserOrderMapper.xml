@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.mapper.UserOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cqu.entity.UserOrder">
+        <id column="o_Id" property="oId" />
+        <result column="o_Time" property="oTime" />
+        <result column="o_State" property="oState" />
+        <result column="p_Id" property="pId" />
+        <result column="buyer_Id" property="buyerId" />
+        <result column="o_receiverName" property="oReceivername" />
+        <result column="o_receiverPhone" property="oReceiverphone" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        o_Id, o_Time, o_State, p_Id, buyer_Id, o_receiverName, o_receiverPhone
+    </sql>
+
+
+    <!-- 根据orderId返回orderInfo的信息 -->
+    <select id="lookUpDetailedOrderInfoByOrderId" resultType="cn.edu.cqu.entity.query_vo.OrderInfoVo">
+        select uo.o_id as orderId,p.p_Id as productId,p.p_Name as productName,ub.u_Id as buyerId,
+               ub.u_Name as buyerName,us.u_Id as sellerId, us.u_Name as sellerName
+        from user_order uo,product p,user ub,user us
+        where uo.o_Id=#{oId} and p.p_Id=uo.p_Id and ub.u_Id=uo.buyer_Id and us.u_Id=uo.seller_Id
+    </select>
+
+    <!-- 根据买家Id返回订单中买、卖家的信息，商品的信息、订单的信息 -->
+    <select id="lookUpDetailedOrderInfoByBuyerId" resultType="cn.edu.cqu.entity.query_vo.OrderInfoVo">
+        select uo.o_Id as oId, p.p_Id as pId,p.p_Name as pName,p.p_Price as pPrice,p.p_State as pState,
+               ub.u_Id as buyerId, ud.r_ReceiveName as receiverName,us.u_Id as sellerId,
+               us.u_Name as sellerName, us.u_PhoneNum as sellerPhone,uo.buyer_AddrId as buyerAddId,
+               ud.r_ReceiveAddress as receiveAddr
+        from user_order uo,product p,user ub,user us, user_addr ud,
+        where uo.buyer_Id=#{buyerId}
+        and p.p_Id=uo.p_Id and ub.u_Id=uo.buyer_Id and us.u_Id=uo.seller_Id and ud.r_Id=uo.buyer_AddId
+    </select>
+
+
+
+    <!-- 根据卖家Id返回订单中买、卖家的信息，商品的信息、订单的信息 -->
+    <select id="lookUpDetailedOrderInfoBySellerId" resultType="cn.edu.cqu.entity.query_vo.OrderInfoVo">
+        select uo.o_id as orderId,p.p_Id as productId,p.p_Name as productName,ub.u_Id as buyerId,
+               ub.u_Name as buyerName,us.u_Id as sellerId, us.u_Name as sellerName
+        from user_order uo,product p,user ub,user us
+        where uo.seller_Id=#{sellerId} and p.p_Id=uo.p_Id and ub.u_Id=uo.buyer_Id and us.u_Id=uo.seller_Id
+    </select>
+
+    <select id="lookUpBuyOrder" resultType="cn.edu.cqu.entity.query_vo.OrderInfoVo">
+        select uo.*,p.*,ub.u_Name as buyerName,us.u_Name as sellerName,
+               ua.r_ReciverAddress as receiverAddr,us.u_PhoneNum as sellerPhone,
+               ua.r_Id as buyerAddrId,ua.r_ReceiverName as receiverName,ua.r_ReceiverPhone as receiverPhone
+        from user_order uo
+         join product p
+                on uo.buyer_Id=#{userId} and uo.p_Id=p.p_Id
+         join user ub
+                on ub.u_Id=#{userId}
+         join user us
+                on uo.buyer_Id=#{userId} and p.seller_Id=us.u_Id
+        join user_addr ua
+                on uo.buyer_Id=#{userId} and ua.r_Id=uo.buyer_AddrId
+
+    </select>
+
+    <select id="lookUpSellOrder" resultType="cn.edu.cqu.entity.query_vo.OrderInfoVo">
+        select uo.*,p.*,ub.u_Name as buyerName,us.u_Name as sellerName,
+               ua.r_ReciverAddress as receiverAddr,us.u_PhoneNum as sellerPhone,
+               ua.r_Id as buyerAddrId,ua.r_ReceiverName as receiverName,
+               ub.u_PhoneNum as buyerPhone,ua.r_ReceiverPhone as receiverPhone
+        from  product p
+                 join user_order uo
+                      on p.seller_Id=#{userId} and p.p_State=1 and uo.p_Id=p.p_Id
+                 join user ub
+                      on p.seller_Id=#{userId} and p.p_State=1 and ub.u_Id=uo.buyer_Id
+                 join user us
+                      on p.seller_Id=#{userId} and p.p_State=1 and p.seller_Id=us.u_Id
+                 join user_addr ua
+                      on p.seller_Id=#{userId} and p.p_State=1 and ua.r_Id=uo.buyer_AddrId
+
+    </select>
+
+
+</mapper>

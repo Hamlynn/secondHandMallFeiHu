@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.mapper.ShoppingcarProductMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cqu.entity.ShoppingcarProduct">
+        <id column="sp_Id" property="spId" />
+        <result column="u_Id" property="uId" />
+        <result column="p_Id" property="pId" />
+        <result column="sp_AddTime" property="spAddTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sp_Id, u_Id, p_Id,sp_AddTime
+    </sql>
+
+
+    <!--   查询用户 -->
+    <select id="lookUpShoppingCarByUserId" resultType="cn.edu.cqu.entity.query_vo.ShoppingCarVo">
+        select *
+        from shoppingcar_product s,product p
+        where s.u_Id=#{uId} and p.p_Id=s.p_Id
+    </select>
+</mapper>

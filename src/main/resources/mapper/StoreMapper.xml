@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.mapper.StoreMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cqu.entity.Store">
+        <id column="store_Id" property="storeId" />
+        <result column="u_Id" property="uId" />
+        <result column="p_Id" property="pId" />
+        <result column="store_Time" property="storeTime" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        store_Id, u_Id, p_Id, store_Time
+    </sql>
+
+
+    <!--   查询用户 -->
+    <select id="lookUpStoreProductByUserId" resultType="cn.edu.cqu.entity.query_vo.StoreInfoVo">
+        select *
+        from store s,product p
+        where s.u_Id=#{uId} and p.p_Id=s.p_Id
+    </select>
+
+
+</mapper>

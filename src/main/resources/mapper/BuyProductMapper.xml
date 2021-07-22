@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.mapper.BuyProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cqu.entity.BuyProduct">
+        <id column="buy_Id" property="buyId" />
+        <result column="buy_ProductName" property="buyProductName" />
+        <result column="buy_Intro" property="buyIntro" />
+        <result column="buy_BuyerId" property="buyBuyerId" />
+        <result column="buy_Time" property="buyTime" />
+        <result column="buy_Img" property="buyImg" />
+        <result column="buy_Phone" property="buyPhone" />
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        buy_Id, buy_ProductName, buy_Intro, buy_BuyerId, buy_Time, buy_Img,buy_Phone
+    </sql>
+
+    <!--   根据id查询商品详细信息 -->
+    <select id="lookUpAllBuyInfo" resultType="cn.edu.cqu.entity.query_vo.BuyInfoVo">
+        select b.*,u.u_Name as buyBuyerName,u.u_School as buyBuyerSchool,u.u_PhoneNum as
+            buyBuyerPhone
+        from user u,buy_product b
+        where u.u_Id=b.buy_BuyerId
+
+    </select>
+
+</mapper>

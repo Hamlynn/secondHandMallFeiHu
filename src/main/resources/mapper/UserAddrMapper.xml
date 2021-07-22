@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.mapper.UserAddrMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cqu.entity.UserAddr">
+        <id column="r_Id" property="rId" />
+        <result column="u_Id" property="uId" />
+        <result column="r_ReciverAddress" property="rReciveraddress" />
+        <result column="r_Flag" property="rFlag" />
+        <result column="r_ReceiverName" property="rReceivername" />
+        <result column="r_ReceiverPhone" property="rReceiverphone" />
+        <result column="r_Province" property="rProvince" />
+        <result column="r_City" property="rCity" />
+        <result column="r_Area" property="rArea" />
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        r_Id, u_Id, r_ReciverAddress, r_Flag, r_ReceiverName, r_ReceiverPhone,r_Province,r_City,r_Area
+    </sql>
+
+</mapper>

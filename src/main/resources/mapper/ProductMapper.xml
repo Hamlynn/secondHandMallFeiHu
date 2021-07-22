@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.mapper.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cqu.entity.Product">
+        <id column="p_Id" property="pId" />
+        <result column="p_Name" property="pName" />
+        <result column="seller_Id" property="sellerId" />
+        <result column="p_Intro" property="pIntro" />
+        <result column="p_Img" property="pImg" />
+        <result column="c_Id" property="cId" />
+        <result column="p_Price" property="pPrice" />
+        <result column="p_State" property="pState" />
+        <result column="p_Time" property="pTime" />
+        <result column="p_ViewNum" property="pViewNum" />
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        p_Id, p_Name, seller_Id, p_Intro, p_Img, c_Id, p_Price, p_State, p_Time,p_ViewNum
+    </sql>
+
+    <!--   查询瀑布流商品对象 -->
+    <select id="lookUpWaterfallProduct" resultType="cn.edu.cqu.entity.query_vo.WaterfallVo">
+        select *
+        from user u,product p,catogory c
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id
+    </select>
+
+    <!--   查询所有商品详细信息 -->
+    <select id="lookUpProductDetail" resultType="cn.edu.cqu.entity.query_vo.ProductDetailVo">
+        select *
+        from user u, catogory c, product p
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id
+    </select>
+
+
+    <!--   根据id查询商品详细信息 -->
+    <select id="lookUpProductDetailByPid" resultType="cn.edu.cqu.entity.query_vo.ProductDetailVo">
+        select *
+        from user u, catogory c, product p
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id AND p.p_Id=#{id}
+    </select>
+
+    <!--   根据分类名查询商品详细信息 -->
+    <select id="listProductByCname" resultType="cn.edu.cqu.entity.query_vo.ProductDetailVo">
+        select *
+        from user u, catogory c, product p
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id AND c.c_Name=#{cname}
+    </select>
+
+    <!--   根据商品价格范围详细信息 -->
+    <select id="listProductByPriceRange" resultType="cn.edu.cqu.entity.query_vo.ProductDetailVo">
+        select *
+        from user u, catogory c, product p
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id AND  p.p_Price between #{price_low} and #{price_high};
+    </select>
+
+    <!--   根据商品浏览量范围查询商品详细信息 -->
+    <select id="listProductByViewNumRange" resultType="cn.edu.cqu.entity.query_vo.ProductDetailVo">
+        select *
+        from user u, catogory c, product p
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id AND  p.p_ViewNum between #{viewNum_low} and #{viewNum_high};
+    </select>
+    <!--   根据商品浏览量范围查询商品详细信息 -->
+    <select id="lookMaxIdInProduct" resultType="int">
+        select max(p_Id)
+        from product
+    </select>
+
+    <!--   查询所有商品详细信息 -->
+    <select id="lookUpProductInfoByPname" resultType="cn.edu.cqu.entity.query_vo.ProductDetailVo">
+        select *
+        from user u, catogory c, product p
+        where u.u_Id=p.seller_Id AND c.c_Id=p.c_Id AND p.p_Name like #{pname}
+    </select>
+
+</mapper>
